@@ -1,0 +1,84 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Code-DIY App
+# during dev, should point to your local machine
+host: localhost:8080
+# basePath prefixes all resource paths 
+basePath: /
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /addAdmin:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: adminController_addAdmin
+    post:
+      # used as the method name of the controller
+      operationId: save
+      description: add a new admin to the collection and Returns 'admin' to the caller
+      parameters:
+        - name: name
+          in: query
+          description: The name of the person to whom to say hello
+          required: true
+          type: string
+
+        - name: email
+          in: query
+          description: The email of the person
+          required: true
+          type: string
+
+        - name: password
+          in: query
+          description: The password of the person
+          required: true
+          type: string
+
+        - name: adminType
+          in: query
+          description: The adminType of the person
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GetAddAdminResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  GetAddAdminResponse:
+    required:
+      - _id
+      - name
+      - email      
+    properties:
+      _id:
+        type: string
+      name: 
+        type: string
+      email:
+        type: string
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
